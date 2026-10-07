@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://cms-portfolio-0yaf.onrender.com/api';
 
 export function getAuthToken(): string | null {
   return localStorage.getItem('cms_admin_jwt');
