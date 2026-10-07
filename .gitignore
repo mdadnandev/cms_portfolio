@@ -1,0 +1,18 @@
+# Java & Maven
+backend/target/
+*.class
+*.jar
+*.war
+
+# Node & Dependencies
+node_modules/
+.next/
+dist/
+build/
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.log

@@ -54,6 +54,8 @@ cd /Volumes/mac-D/Adnan/Cms/frontend
 npm run dev
 ```
 👉 URL: `http://localhost:3000`
+👉 Live Production Website: `https://cms-portfolio-kappa.vercel.app/`
+
 
 ### 3. Standalone CMS Admin Dashboard (Port 5173)
 ```bash

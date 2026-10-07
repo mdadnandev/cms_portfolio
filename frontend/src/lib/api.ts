@@ -1,5 +1,12 @@
 // API Client for Custom Java Spring Boot CMS Backend
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cms-portfolio-0yaf.onrender.com/api';
+const getApiBaseUrl = () => {
+  let url = (process.env.NEXT_PUBLIC_API_URL || 'https://cms-portfolio-0yaf.onrender.com/api').trim().replace(/\/+$/, '');
+  if (!url.endsWith('/api')) {
+    url += '/api';
+  }
+  return url;
+};
+const API_BASE_URL = getApiBaseUrl();
 
 export function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -38,6 +45,9 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
   });
 
   if (!response.ok) {
+    if ((response.status === 401 || response.status === 403) && !endpoint.includes('/auth/login')) {
+      removeAuthToken();
+    }
     const errorText = await response.text();
     let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
     try {
