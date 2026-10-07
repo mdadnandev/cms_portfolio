@@ -77,6 +77,17 @@ export default function App() {
   });
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  // Skill Modal State (Create / Edit)
+  const [skillModalOpen, setSkillModalOpen] = useState(false);
+  const [editingSkillId, setEditingSkillId] = useState<number | null>(null);
+  const [skillForm, setSkillForm] = useState({
+    name: '',
+    category: 'Backend',
+    proficiency: 85,
+    iconName: 'Code2',
+    displayOrder: 0,
+  });
+
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
 
   useEffect(() => {
@@ -236,7 +247,51 @@ export default function App() {
     }
   };
 
+  // SKILL ACTIONS (Create / Edit Modal)
+  const openNewSkillModal = () => {
+    setEditingSkillId(null);
+    setSkillForm({
+      name: '',
+      category: 'Backend',
+      proficiency: 85,
+      iconName: 'Code2',
+      displayOrder: skillsList.length + 1,
+    });
+    setSkillModalOpen(true);
+  };
+
+  const openEditSkillModal = (skill: any) => {
+    setEditingSkillId(skill.id);
+    setSkillForm({
+      name: skill.name || '',
+      category: skill.category || 'Backend',
+      proficiency: skill.proficiency ?? 85,
+      iconName: skill.iconName || 'Code2',
+      displayOrder: skill.displayOrder ?? 0,
+    });
+    setSkillModalOpen(true);
+  };
+
+  const saveSkillForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingSkillId) {
+        const updated = await skillsApi.update(editingSkillId, skillForm);
+        setSkillsList(skillsList.map((s) => (s.id === editingSkillId ? updated : s)));
+        showNotify('success', 'Skill updated successfully!');
+      } else {
+        const created = await skillsApi.create(skillForm);
+        setSkillsList([...skillsList, created]);
+        showNotify('success', 'Skill added successfully!');
+      }
+      setSkillModalOpen(false);
+    } catch (err: any) {
+      showNotify('error', err.message || 'Failed to save skill');
+    }
+  };
+
   const deleteSkill = async (id: number) => {
+    if (!window.confirm('Are you sure you want to delete this skill?')) return;
     try {
       await skillsApi.delete(id);
       setSkillsList(skillsList.filter((s) => s.id !== id));
@@ -628,37 +683,63 @@ export default function App() {
           {activeTab === 'skills' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-black text-slate-900">Skills</h2>
+                <div>
+                  <h2 className="text-2xl font-black text-slate-900">Skills & Tech Stack</h2>
+                  <p className="text-xs text-slate-500">Manage technical competencies, categories, and proficiency levels</p>
+                </div>
                 <button
-                  onClick={async () => {
-                    const created = await skillsApi.create({
-                      name: 'New Tech Skill',
-                      category: 'Backend',
-                      proficiency: 90,
-                      iconName: 'Code',
-                      displayOrder: skillsList.length + 1,
-                    });
-                    setSkillsList([...skillsList, created]);
-                  }}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-md shadow-blue-500/20"
+                  onClick={openNewSkillModal}
+                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all"
                 >
-                  <Plus className="w-4 h-4" /> Add Skill
+                  <Plus className="w-4 h-4" /> Add Custom Skill
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {skillsList.map((skill) => (
-                  <div key={skill.id} className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between shadow-sm">
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900">{skill.name}</h4>
-                      <p className="text-xs text-blue-600 font-semibold">{skill.category} • {skill.proficiency}%</p>
+                  <div key={skill.id} className="bg-white p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="text-base font-bold text-slate-900">{skill.name}</h4>
+                          <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100 uppercase tracking-wider mt-1">
+                            {skill.category}
+                          </span>
+                        </div>
+                        <span className="text-sm font-extrabold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">
+                          {skill.proficiency}%
+                        </span>
+                      </div>
+
+                      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
+                        <div
+                          className="bg-blue-600 h-full rounded-full"
+                          style={{ width: `${Math.min(Math.max(skill.proficiency || 0, 0), 100)}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => deleteSkill(skill.id)}
-                      className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        Order: {skill.displayOrder || 0}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openEditSkillModal(skill)}
+                          className="p-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
+                          title="Edit Skill"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => deleteSkill(skill.id)}
+                          className="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors"
+                          title="Delete Skill"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -847,6 +928,119 @@ export default function App() {
                   className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20"
                 >
                   {editingProjectId ? 'Save Project Updates' : 'Publish Project'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* FULL SKILL EDITOR MODAL */}
+      {skillModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+            <button
+              onClick={() => setSkillModalOpen(false)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-900 bg-slate-100 rounded-full"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div>
+              <h3 className="text-2xl font-black text-slate-900">
+                {editingSkillId ? 'Edit Skill' : 'Add Custom Skill'}
+              </h3>
+              <p className="text-xs text-slate-500">Configure skill name, category, proficiency level and display order</p>
+            </div>
+
+            <form onSubmit={saveSkillForm} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Skill Name</label>
+                <input
+                  type="text"
+                  required
+                  value={skillForm.name}
+                  onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
+                  placeholder="e.g. Java & Spring Boot, React, PostgreSQL"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-900 outline-none focus:border-blue-600 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Category</label>
+                <select
+                  value={skillForm.category}
+                  onChange={(e) => setSkillForm({ ...skillForm, category: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-900 outline-none focus:border-blue-600 font-bold"
+                >
+                  <option value="Backend">Backend</option>
+                  <option value="Frontend">Frontend</option>
+                  <option value="Database">Database</option>
+                  <option value="DevOps">DevOps</option>
+                  <option value="Tools">Tools</option>
+                </select>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-bold text-slate-700">Proficiency Level (%)</label>
+                  <span className="text-xs font-black text-blue-600">{skillForm.proficiency}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={skillForm.proficiency}
+                  onChange={(e) => setSkillForm({ ...skillForm, proficiency: parseInt(e.target.value) || 0 })}
+                  className="w-full accent-blue-600 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-1">
+                  <span>0% Beginner</span>
+                  <span>50% Intermediate</span>
+                  <span>100% Expert</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Icon Type</label>
+                  <select
+                    value={skillForm.iconName}
+                    onChange={(e) => setSkillForm({ ...skillForm, iconName: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-900 outline-none focus:border-blue-600"
+                  >
+                    <option value="Server">Server (Backend)</option>
+                    <option value="Code2">Code2 (Frontend)</option>
+                    <option value="Database">Database</option>
+                    <option value="Layers">Layers (DevOps)</option>
+                    <option value="Cpu">Cpu</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Display Order</label>
+                  <input
+                    type="number"
+                    value={skillForm.displayOrder}
+                    onChange={(e) => setSkillForm({ ...skillForm, displayOrder: parseInt(e.target.value) || 0 })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-900 outline-none focus:border-blue-600"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSkillModalOpen(false)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20"
+                >
+                  {editingSkillId ? 'Update Skill' : 'Save Skill'}
                 </button>
               </div>
             </form>
