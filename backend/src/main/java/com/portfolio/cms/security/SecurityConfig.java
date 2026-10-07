@@ -60,8 +60,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**", "/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/about/**", "/api/skills/**", "/api/projects/**", "/api/blogs/**", "/api/experience/**", "/api/testimonials/**", "/api/services/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/contact/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/about/**", "/about/**", "/api/skills/**", "/skills/**", "/api/projects/**", "/projects/**", "/api/blogs/**", "/blogs/**", "/api/experience/**", "/experience/**", "/api/testimonials/**", "/testimonials/**", "/api/services/**", "/services/**", "/api/media/**", "/media/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/contact/**", "/contact/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             );
