@@ -50,6 +50,13 @@ const defaultProjects = [
   },
 ];
 
+const getValidProjectImage = (url?: string) => {
+  if (!url || url.startsWith('/project') || url.startsWith('/blog') || url.startsWith('/avatar')) {
+    return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
+  }
+  return url;
+};
+
 export default function ProjectsSection() {
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
@@ -105,7 +112,7 @@ export default function ProjectsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => {
             const tagList = project.tags ? project.tags.split(',') : [];
-            const img = project.imageUrl || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
+            const img = getValidProjectImage(project.imageUrl);
             return (
               <div
                 key={project.id}
@@ -205,7 +212,7 @@ export default function ProjectsSection() {
 
             <div className="relative h-64 w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
               <Image
-                src={activeModalProject.imageUrl || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop'}
+                src={getValidProjectImage(activeModalProject.imageUrl)}
                 alt={activeModalProject.title}
                 fill
                 className="object-cover"

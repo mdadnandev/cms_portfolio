@@ -34,6 +34,13 @@ const defaultBlogs = [
   },
 ];
 
+const getValidBlogImage = (url?: string) => {
+  if (!url || url.startsWith('/blog') || url.startsWith('/project') || url.startsWith('/avatar')) {
+    return 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop';
+  }
+  return url;
+};
+
 export default function BlogSection() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [selectedBlogModal, setSelectedBlogModal] = useState<any>(null);
@@ -69,7 +76,7 @@ export default function BlogSection() {
             >
               <div className="relative h-52 w-full bg-slate-100 overflow-hidden">
                 <Image
-                  src={blog.coverImage || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop'}
+                  src={getValidBlogImage(blog.coverImage)}
                   alt={blog.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -123,7 +130,7 @@ export default function BlogSection() {
 
             <div className="relative h-64 w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
               <Image
-                src={selectedBlogModal.coverImage || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop'}
+                src={getValidBlogImage(selectedBlogModal.coverImage)}
                 alt={selectedBlogModal.title}
                 fill
                 className="object-cover"

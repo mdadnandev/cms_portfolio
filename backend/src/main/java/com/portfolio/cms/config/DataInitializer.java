@@ -66,7 +66,7 @@ public class DataInitializer implements CommandLineRunner {
             about.setGithubUrl("https://github.com");
             about.setLinkedinUrl("https://linkedin.com");
             about.setTwitterUrl("https://twitter.com");
-            about.setAvatarUrl("/hero-avatar.jpg");
+            about.setAvatarUrl("https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop");
             about.setResumeUrl("/resume.pdf");
             aboutRepository.save(about);
         }
@@ -90,9 +90,9 @@ public class DataInitializer implements CommandLineRunner {
 
         // 5. Seed Projects
         if (projectRepository.count() == 0) {
-            createProject("Custom Enterprise Portfolio & Headless CMS", "Full-stack headless CMS engine built with Java Spring Boot, JWT Security, and PostgreSQL paired with a Next.js Executive Portfolio.", "Full-Stack & CMS", "/project1.jpg", "https://example.com", "https://github.com", "Java, Spring Boot, React, Next.js, PostgreSQL, Tailwind", true, 1);
-            createProject("FinTech Wealth Analytics Dashboard", "Real-time cryptocurrency and stocks analytical platform with interactive charting and automated ledger feeds.", "Web App", "/project2.jpg", "https://example.com", "https://github.com", "React, Tailwind, Node.js, WebSockets, Chart.js", true, 2);
-            createProject("Cloudinary-Powered Asset Engine", "Automated asset optimization microservice for fast media streaming, transformations, and global CDN distribution.", "Cloud & API", "/project3.jpg", "https://example.com", "https://github.com", "Spring Boot, Cloudinary API, Docker, PostgreSQL", false, 3);
+            createProject("Custom Enterprise Portfolio & Headless CMS", "Full-stack headless CMS engine built with Java Spring Boot, JWT Security, and PostgreSQL paired with a Next.js Executive Portfolio.", "Full-Stack & CMS", "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop", "https://example.com", "https://github.com", "Java, Spring Boot, React, Next.js, PostgreSQL, Tailwind", true, 1);
+            createProject("FinTech Wealth Analytics Dashboard", "Real-time cryptocurrency and stocks analytical platform with interactive charting and automated ledger feeds.", "Web App", "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop", "https://example.com", "https://github.com", "React, Tailwind, Node.js, WebSockets, Chart.js", true, 2);
+            createProject("Cloudinary-Powered Asset Engine", "Automated asset optimization microservice for fast media streaming, transformations, and global CDN distribution.", "Cloud & API", "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop", "https://example.com", "https://github.com", "Spring Boot, Cloudinary API, Docker, PostgreSQL", false, 3);
         }
 
         // 6. Seed Experience
@@ -103,14 +103,14 @@ public class DataInitializer implements CommandLineRunner {
 
         // 7. Seed Testimonials
         if (testimonialRepository.count() == 0) {
-            createTestimonial("Elena Rostova", "VP of Product", "Vanguard Digital", "/avatar1.jpg", "Adnan delivered our custom CMS platform ahead of schedule with flawless architecture. His attention to design detail is unmatched.", 5);
-            createTestimonial("Marcus Vance", "CTO", "Aether Labs", "/avatar2.jpg", "The Spring Boot API performance paired with the sleek Next.js UI exceeded all our expectations.", 5);
+            createTestimonial("Elena Rostova", "VP of Product", "Vanguard Digital", "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop", "Adnan delivered our custom CMS platform ahead of schedule with flawless architecture. His attention to design detail is unmatched.", 5);
+            createTestimonial("Marcus Vance", "CTO", "Aether Labs", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop", "The Spring Boot API performance paired with the sleek Next.js UI exceeded all our expectations.", 5);
         }
 
         // 8. Seed Blogs
         if (blogRepository.count() == 0) {
-            createBlog("Building a Custom Headless CMS from Scratch with Java Spring Boot", "building-custom-cms-spring-boot", "Learn how to build a lightweight, ultra-secure CMS backend without relying on third-party SaaS dependencies.", "In this deep dive, we explore how to construct a robust Java 21 Spring Boot REST API backed by PostgreSQL, JWT authentication, and Cloudinary image uploads.", "/blog1.jpg", "Adnan", "6 min read", "Java, Spring Boot, CMS, Backend");
-            createBlog("Designing Executive Dark-Theme UIs with Gold Halos & Tailwind CSS", "executive-dark-theme-ui-tailwind", "Mastering modern executive portfolio aesthetic with frosted glassmorphism and ambient glow effects.", "Visual elegance is key for senior developer portfolios. Here is how we implemented gold/amber halo lighting and high-contrast typography.", "/blog2.jpg", "Adnan", "4 min read", "React, Tailwind CSS, UI/UX, Design");
+            createBlog("Building a Custom Headless CMS from Scratch with Java Spring Boot", "building-custom-cms-spring-boot", "Learn how to build a lightweight, ultra-secure CMS backend without relying on third-party SaaS dependencies.", "In this deep dive, we explore how to construct a robust Java 21 Spring Boot REST API backed by PostgreSQL, JWT authentication, and Cloudinary image uploads.", "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop", "Adnan", "6 min read", "Java, Spring Boot, CMS, Backend");
+            createBlog("Designing Executive Dark-Theme UIs with Gold Halos & Tailwind CSS", "executive-dark-theme-ui-tailwind", "Mastering modern executive portfolio aesthetic with frosted glassmorphism and ambient glow effects.", "Visual elegance is key for senior developer portfolios. Here is how we implemented gold/amber halo lighting and high-contrast typography.", "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop", "Adnan", "4 min read", "React, Tailwind CSS, UI/UX, Design");
         }
     }
 

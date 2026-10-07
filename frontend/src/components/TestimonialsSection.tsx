@@ -65,7 +65,15 @@ export default function TestimonialsSection() {
 
               <div className="flex items-center gap-4 pt-4 border-t border-slate-200">
                 <div className="w-12 h-12 rounded-full bg-slate-100 overflow-hidden border border-blue-300 relative shadow-sm">
-                  <img src={item.avatarUrl} alt={item.clientName} className="w-full h-full object-cover" />
+                  <img
+                    src={
+                      !item.avatarUrl || item.avatarUrl.startsWith('/avatar') || item.avatarUrl.startsWith('/project')
+                        ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop'
+                        : item.avatarUrl
+                    }
+                    alt={item.clientName}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">{item.clientName}</h4>
